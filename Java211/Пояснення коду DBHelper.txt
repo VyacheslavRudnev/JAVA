@@ -1,0 +1,182 @@
+Цей клас `DbHelper` є допоміжним класом для роботи з базою даних MySQL у Java. Він надає функціональність для підключення до бази, виконання запитів (`INSERT`, `UPDATE`, `DELETE`, `CREATE` тощо) та отримання результатів `SELECT`.
+
+Розберемо код детально:
+
+---
+
+### 1. **Поля класу**
+```java
+String host;
+String user;
+String password;
+String dbName;
+Connection conn = null;
+```
+- `host` — адреса сервера бази даних (наприклад, `localhost` або `127.0.0.1`).
+- `user` — ім'я користувача бази даних.
+- `password` — пароль користувача.
+- `dbName` — назва бази даних.
+- `conn` — змінна для збереження об'єкта підключення `Connection`.
+
+---
+
+### 2. **Конструктор**
+```java
+public DbHelper(String host, String user, String password, String dbName) {
+    this.host = host;
+    this.user = user;
+    this.password = password;
+    this.dbName = dbName;
+
+    //driver registration
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+    } catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+- Конструктор отримує параметри для підключення до бази даних (`host`, `user`, `password`, `dbName`) та зберігає їх у полях класу.
+- Використовується `Class.forName("com.mysql.cj.jdbc.Driver");`, щоб завантажити MySQL JDBC-драйвер.  
+  - У сучасних версіях JDBC це не завжди обов'язково, оскільки драйвер завантажується автоматично.
+
+---
+
+### 3. **Метод підключення до бази**
+```java
+public Connection connect(){
+    String url = "jdbc:mysql://" + host + "/"+ dbName+"?useUnicode=true&characterEncoding=utf-8";
+    try {
+        conn = DriverManager.getConnection(url, user, password);
+        System.out.println("*** Connection OK ***");
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+    return conn;
+}
+```
+- Формується рядок підключення (`url`), який містить:
+  - `jdbc:mysql://` — протокол JDBC для MySQL.
+  - `host` — сервер бази (`localhost`, `127.0.0.1`, або IP).
+  - `dbName` — ім'я бази даних.
+  - `useUnicode=true&characterEncoding=utf-8` — налаштування кодування (UTF-8).
+- Використовується `DriverManager.getConnection(url, user, password)`, щоб встановити з'єднання.
+- Якщо підключення успішне, виводиться `*** Connection OK ***`.
+- У разі помилки викидається виняток `RuntimeException`.
+
+---
+
+### 4. **Метод виконання запитів (`INSERT`, `UPDATE`, `DELETE`, `CREATE`, тощо)**
+```java
+public boolean executeQuery(String query){
+    if(this.conn == null || query == null){
+        System.out.println("*** Call connect() and create a query! ***");
+        return false;
+    }
+    Statement comm = null;
+
+    try {
+        comm = this.conn.createStatement();
+        comm.execute(query);
+        return true;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return false;
+    }
+}
+```
+- Виконує будь-які SQL-запити, які не повертають `ResultSet` (наприклад, `INSERT`, `UPDATE`, `DELETE`, `CREATE TABLE`).
+- Перевіряє, чи є підключення (`this.conn != null`).
+- Використовує `Statement` для виконання запиту.
+- Якщо все добре — повертає `true`, якщо сталася помилка — повертає `false` та виводить `SQLException`.
+
+**Приклад використання:**
+```java
+DbHelper db = new DbHelper("localhost", "root", "password", "test_db");
+db.connect();
+db.executeQuery("CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(50))");
+```
+
+---
+
+### 5. **Метод виконання `SELECT`-запитів**
+```java
+public ResultSet executeSelect(String query){
+    if(this.conn == null || query == null){
+        System.out.println("*** Call connect() and create a query! ***");
+        return null;
+    }
+    Statement comm = null;
+    ResultSet set = null;
+
+    try {
+        comm = this.conn.createStatement();
+        set = comm.executeQuery(query);
+        return set;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return null;
+    }
+}
+```
+- Виконує `SELECT`-запити та повертає `ResultSet`, що містить результати.
+- Перевіряє, чи є підключення.
+- Використовує `Statement` для виконання `executeQuery(query)`.
+- У разі успішного виконання повертає `ResultSet`, у разі помилки — `null`.
+
+**Приклад використання:**
+```java
+DbHelper db = new DbHelper("localhost", "root", "password", "test_db");
+db.connect();
+ResultSet rs = db.executeSelect("SELECT * FROM users");
+
+try {
+    while (rs.next()) {
+        System.out.println("ID: " + rs.getInt("id") + ", Name: " + rs.getString("name"));
+    }
+} catch (SQLException e) {
+    e.printStackTrace();
+}
+```
+
+---
+
+### **Мінуси цього коду (що можна покращити):**
+1. **Не закриваються ресурси (`Statement`, `ResultSet`)**  
+   - Використання `try-with-resources` значно покращило б роботу з ресурсами.
+   ```java
+   try (Statement comm = this.conn.createStatement()) {
+       comm.execute(query);
+   } catch (SQLException ex) {
+       ex.printStackTrace();
+       return false;
+   }
+   ```
+
+2. **Відсутність `PreparedStatement`**  
+   - Якщо потрібно передавати змінні в запити, слід використовувати `PreparedStatement` для захисту від SQL-ін'єкцій.
+
+3. **Не закривається підключення (`Connection`)**  
+   - Можна додати метод `closeConnection()`, щоб закривати підключення після використання:
+   ```java
+   public void closeConnection() {
+       if (conn != null) {
+           try {
+               conn.close();
+               System.out.println("Connection closed.");
+           } catch (SQLException e) {
+               e.printStackTrace();
+           }
+       }
+   }
+   ```
+
+---
+
+### **Висновок**
+Клас `DbHelper` забезпечує базові операції з MySQL:
+- Підключення (`connect()`).
+- Виконання команд (`executeQuery()`).
+- Виконання `SELECT`-запитів (`executeSelect()`).
+
+Це корисна база для роботи з БД, але її можна вдосконалити (додати `PreparedStatement`, `try-with-resources`, метод закриття з'єднання).

@@ -1,0 +1,158 @@
+Цей код є головним класом (`Main`), який використовує `DbHelper` для роботи з базою даних MySQL. Він виконує наступні дії:  
+
+1. **Підключається до бази**  
+2. **Створює таблицю `Books`, якщо вона не існує**  
+3. **Додає дані двома способами (поганим та правильним)**  
+4. **Виконує `SELECT` для виведення всіх записів із таблиці `Books`**  
+
+---
+
+## **Детальний розбір коду**  
+
+### **1. Підключення до бази даних**  
+```java
+DbHelper helper = new DbHelper("127.0.0.1:3306", "root", "123456", "java-test");
+Connection conn = helper.connect();
+```
+- **Створюється екземпляр `DbHelper`** з параметрами:
+  - `127.0.0.1:3306` — локальний сервер MySQL (порт 3306).
+  - `root` — ім'я користувача.
+  - `123456` — пароль.
+  - `java-test` — ім'я бази даних.  
+- **Викликається `connect()`** для встановлення з'єднання.
+
+---
+
+### **2. Створення таблиці `Books`**  
+```java
+String createTableBook = "create table if not exists Books("+
+"id integer primary key auto_increment,"+
+"title varchar(128) not null,"+
+"author varchar(128) not null,"+
+"price integer)";
+
+if(helper.executeQuery(createTableBook)){
+    System.out.println("*** Table Books was created! ***");
+}
+```
+- Використовується `CREATE TABLE IF NOT EXISTS`, щоб створити таблицю `Books`, якщо вона ще не існує.
+- Колонки:
+  - `id` — унікальний ідентифікатор (`PRIMARY KEY`, `AUTO_INCREMENT`).
+  - `title` — назва книги (`VARCHAR(128) NOT NULL`).
+  - `author` — автор (`VARCHAR(128) NOT NULL`).
+  - `price` — ціна (`INTEGER`).
+- Викликається `executeQuery()` для створення таблиці.
+
+---
+
+### **3. Додавання книг у таблицю (два способи)**  
+#### ❌ **Поганий спосіб (SQL-ін'єкції!)**
+```java
+String ins1 = "insert into Books (title, author, price) values('"+title1+"', '"+author1+"', "+price1+")";
+helper.executeQuery(ins1);
+```
+- Створення SQL-запиту шляхом конкатенації рядків **небезпечне!**
+- **SQL-ін'єкції**: якщо `title1`, `author1` містять `'; DROP TABLE Books; --`, це може призвести до видалення таблиці!
+- **Правильний спосіб — використовувати `PreparedStatement`**.
+
+#### ✅ **Правильний спосіб (з PreparedStatement)**
+```java
+String ins2 = "insert into Books (title, author, price) values(?, ?, ?)";
+
+try {
+    PreparedStatement ps = conn.prepareStatement(ins2);
+    ps.setString(1, title2);
+    ps.setString(2, author2);
+    ps.setInt(3, price2);
+    ps.executeUpdate();
+} catch (SQLException e) {
+    throw new RuntimeException(e);
+}
+```
+- Використовується `PreparedStatement`, який запобігає SQL-ін'єкціям.
+- Запит містить `?` як заповнювачі (`placeholders`), які замінюються конкретними значеннями:
+  - `ps.setString(1, title2);` — вставляє `title2` у перше `?`
+  - `ps.setString(2, author2);` — вставляє `author2`
+  - `ps.setInt(3, price2);` — вставляє `price2`
+- `executeUpdate()` виконує `INSERT`.
+
+---
+
+### **4. Виконання `SELECT` для отримання всіх книг**
+```java
+String sel1 = "select * from books";
+ResultSet set = helper.executeSelect(sel1);
+
+try {
+    while(set.next()) {
+        System.out.println(set.getInt(1) +" : "+ set.getString(2)+" : "+set.getString(3)+" : "+set.getInt(4));
+    }
+} catch (SQLException e) {
+    throw new RuntimeException(e);
+}
+```
+- Виконується запит `"SELECT * FROM books"`, який повертає всі записи.
+- **Цикл `while(set.next())`** перебирає всі результати:
+  - `set.getInt(1)` — `id`
+  - `set.getString(2)` — `title`
+  - `set.getString(3)` — `author`
+  - `set.getInt(4)` — `price`
+- Вивід у консоль виглядає так:
+  ```
+  1 : Goblin Reservation : Clifford Simak : 220
+  2 : I, robot : Isaac Asimov : 210
+  ```
+
+---
+
+## **Проблеми та покращення коду**
+✅ **Що добре**:
+- Використовується `DbHelper`, що полегшує роботу з БД.
+- Застосовано `PreparedStatement` для безпечного `INSERT`.
+
+❌ **Що можна покращити**:
+1. **Закриття ресурсів (`Connection`, `ResultSet`, `PreparedStatement`)**
+   - Зараз вони не закриваються, що може призвести до витоків пам’яті.
+   - Можна використати `try-with-resources`:
+     ```java
+     try (PreparedStatement ps = conn.prepareStatement(ins2)) {
+         ps.setString(1, title2);
+         ps.setString(2, author2);
+         ps.setInt(3, price2);
+         ps.executeUpdate();
+     } catch (SQLException e) {
+         throw new RuntimeException(e);
+     }
+     ```
+
+2. **Закриття `ResultSet`**
+   - Після використання `ResultSet` його потрібно закривати:
+     ```java
+     try (ResultSet set = helper.executeSelect(sel1)) {
+         while(set.next()) {
+             System.out.println(set.getInt(1) +" : "+ set.getString(2)+" : "+set.getString(3)+" : "+set.getInt(4));
+         }
+     } catch (SQLException e) {
+         throw new RuntimeException(e);
+     }
+     ```
+
+3. **Закриття `Connection` після завершення роботи**
+   ```java
+   helper.closeConnection();
+   ```
+
+4. **Використання `LOGGER` замість `System.out.println()`**
+   - У реальних проєктах логування через `System.out.println()` небажане.
+   - Краще використовувати `java.util.logging.Logger` або `SLF4J` (`Logback`).
+
+---
+
+## **Висновок**
+- Код **створює таблицю, додає записи та читає дані**.
+- **Проблеми**: потенційні SQL-ін'єкції (виправлено `PreparedStatement`), **не закриваються ресурси**.
+- **Покращення**: `try-with-resources`, `closeConnection()`, `LOGGER` замість `System.out.println()`.
+
+---
+
+Якщо маєш питання або хочеш покращити код далі, запитуй! 😊
