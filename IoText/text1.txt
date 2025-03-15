@@ -1,0 +1,58 @@
+Java платформа — це набір коштів на розробки мовою Java, які постачаються розробнику у вигляді єдиного готового рішення. У платформу входять:
+
+1.1.6. Базові поняття технології Java
+Віртуальна машина (JVM) — це специфікація, що описує абстрактну машину, в якій можуть виконуватись програми на java. Машина вважається віртуальною, оскільки більшу її частину становлять різні програмні компоненти. Існують JVM реалізовані різними виробниками, але всі вони дотримуються єдиної специфікації. Реалізація JVM — це програмне забезпечення, що інтерпретує інструкції байт-коду програми в команди операційної системи.
+Компілятор — це засіб, який перетворює вихідний код на байт-код. Java компілятор написаний мовою java. Існують компілятори, які перетворюють вихідний код з інших мов (Ada, JavaScript, Python, Ruby) на байт-код. Існують також мови, адаптовані для роботи на віртуальній java машині (Scala, Groovy).
+Байт-код — це набір інструкцій проміжною мовою, призначений для виконання віртуальною машиною. Кожна інструкція кодується одним байтом. Існує 205 інструкцій, решта (51) є резервом. Байт-код створюється внаслідок компіляції коду програми, що у файлах з розширенням java. Байт-код зберігається у файлах із розширенням class.
+Основним принципом технології java є теза «Написане один раз — працює скрізь» (WORA). Завдяки особливостям платформи програми, написані на java, гарантовано працюють на всіх операційних системах, для яких існують реалізації віртуальної java машини (Платформна незалежність).
+1.1.7. Складання сміття
+У деяких мовах програмування (наприклад, таких як С++) контроль за використанням пам'яті покладено на плечі програміста, що ускладнює процес розробки та призводить до великої кількості помилок та витоків у пам'яті.
+У java контроль за використанням пам'яті покладено на спеціальний механізм, який називається складанням сміття (garbage collector). Наявність механізму автоматичного складання сміття (більше не використовуваних даних) спрощує процес розробки та зменшує кількість помилок під час роботи з пам'яттю.
+1.1.8. Життєвий цикл, компіляції та виконання застосунку Java
+Розробка програм на java починається з написання вихідного коду. Код збе¬рі¬гаєть¬ся у файлах із розширенням java. Вихідний код перетворюється (компілюється) програмою компілятор на байт-код (файли, які мають розширення class). Для виконання програми байт-код запускається на віртуальній машині, яка інтерпретує його в команди операційної системи, яка в свою чергу передає команди апаратної частини електронного пристрою (рис. 2).
+
+The reading
+
+More and more students in Japan are using  artificial intelligence (AI) to learn English and other languages. The language-learning app  Duolingo conducted a survey on how students study languages. More than 4,700 Japanese students answered questions about their language-learning habits. The survey found that the number of people using ChatGPT and other AI tools increased by more than 80 per cent in 2024. AI was particularly popular with younger people. The researchers said more young people used AI than took face-to-face lessons. However, some people in their 20s were not totally happy with AI lessons. They said AI lacked natural responses and was a little boring.
+
+Duolingo said: "We're in the midst of an AI revolution.…Technology has long had an impact on language learning." It found that apps were the most popular method in Japan to learn languages. English was the most studied language, followed by Korean. People are studying Korean "to understand the language as spoken by…favourite artists and celebrities." Duolingo said around 58 per cent of people who took the survey used language-learning apps. This was followed by video streaming platforms like YouTube and Netflix (37%), textbooks (36%) and online lessons (16%). The number of people going to a language school is decreasing. Just 13.8 per cent of people went to classes with a teacher.
+
+Understanding the MVC Framework
+The MVC Framework was introduced in the early ASP.NET, long before .NET Core and .NET 6 were
+introduced. The original ASP.NET relied on a development model called Web Pages, which re-created the
+experience of writing desktop applications but resulted in unwieldy web projects that did not scale well.
+The MVC Framework was introduced alongside Web Pages with a development model that embraced the
+character of HTTP and HTML, rather than trying to hide it.
+MVC stands for Model-View-Controller, which is a design pattern that describes the shape of an
+application. The MVC pattern emphasizes separation of concerns, where areas of functionality are defined
+independently, which was an effective antidote to the indistinct architectures that Web Pages led to.
+Early versions of the MVC Framework were built on the ASP.NET foundations that were originally
+designed for Web Pages, which led to some awkward features and workarounds. With the move to .NET
+Core, ASP.NET became ASP.NET Core, and the MVC Framework was rebuilt on an open, extensible, and
+cross-platform foundation.
+The MVC Framework remains an important part of ASP.NET Core, but the way it is commonly used
+has changed with the rise of single-page applications (SPAs). In an SPA, the browser makes a single HTTP
+request and receives an HTML document that delivers a rich client, typically written in a JavaScript client
+such as Angular or React. The shift to SPAs means that the clean separation that the MVC Framework was
+originally intended for is not as important, and the emphasis placed on following the MVC pattern is no
+longer essential, even though the MVC Framework remains useful (and is used to support SPAs through web
+services, as described in Chapter 19).
+PUTTING PATTERNS IN THEIR PLACE
+Design patterns provoke strong reactions, as the emails I receive from readers will testify. A substantial
+proportion of the messages I receive are complaints that I have not applied a pattern correctly.
+Patterns are just other people’s solutions to the problems they encountered in other projects. If you
+find yourself facing the same problem, understanding how it has been solved before can be helpful.
+But that doesn’t mean you have to follow the pattern exactly, or at all, as long as you understand the
+consequences. If a pattern is intended to make projects manageable, for example, and you choose to
+deviate from that pattern, then you must accept that your project may be more difficult to manage. But a
+pattern followed slavishly can be worse than no pattern at all, and no pattern is suited to every project.
+My advice is to use patterns freely, adapt them as necessary, and ignore zealots who confuse patterns
+with commandments.
+Understanding Razor Pages
+One drawback of the MVC Framework is that it can require a lot of preparatory work before an application
+can start producing content. Despite its structural problems, one advantage of Web Pages was that simple
+applications could be created in a couple of hours.
+Razor Pages takes the development ethos of Web Pages and implements it using the platform features
+originally developed for the MVC Framework. Code and content are mixed to form self-contained pages;
+this re-creates the speed of Web Pages development without some of the underlying technical problems
+(although the issue of scaling up complex projects can still be an issue).
