@@ -1,0 +1,6 @@
+The reading (Кількість символів = 10 )
+ (Кількість символів = 0 )
+Understanding the MVC Framework (Кількість символів = 28 )
+The MVC Framework was introduced in the early ASP.NET, long before .NET Core and .NET 6 were (Кількість символів = 76 )
+introduced. The original ASP.NET relied on a development model called Web Pages, which re-created the experience of writing desktop applications but resulted in unwieldy web projects that did not scale well. (Кількість символів = 177 )
+The MVC Framework was introduced alongside Web Pages with a development model that embraced the character of HTTP and HTML, rather than trying to hide it. (Кількість символів = 129 )

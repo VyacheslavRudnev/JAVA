@@ -1,0 +1,6 @@
+The reading
+
+Understanding the MVC Framework
+The MVC Framework was introduced in the early ASP.NET, long before .NET Core and .NET 6 were
+introduced. The original ASP.NET relied on a development model called Web Pages, which re-created the experience of writing desktop applications but resulted in unwieldy web projects that did not scale well.
+The MVC Framework was introduced alongside Web Pages with a development model that embraced the character of HTTP and HTML, rather than trying to hide it.
