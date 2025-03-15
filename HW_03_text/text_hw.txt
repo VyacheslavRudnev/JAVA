@@ -1,0 +1,40 @@
+The reading
+
+Understanding 111 the MVC Framework
+The MVC Framework was introduced in the early ASP.NET, long before .NET Core and .NET 6 were
+introduced. The original ASP.NET 222 relied on a development model called Web Pages, which re-created the
+experience of writing desktop applications but resulted in unwieldy web projects that did not scale well.
+The MVC Framework was introduced alongside Web Pages 333 with a development model that embraced the
+character of HTTP and HTML, rather than trying to hide it.
+MVC stands for Model-View-Controller, which is a design pattern that describes the shape of an
+application. The MVC pattern emphasizes 444 separation of concerns, where areas of functionality are defined
+independently, which was an effective antidote to the indistinct architectures that Web Pages led to.
+Early versions of the MVC Framework were built on the ASP.NET foundations that were originally
+designed for Web Pages, which led to some awkward features and workarounds. With the move to .NET
+Core, ASP.NET became ASP.NET Core, and the MVC Framework was rebuilt on an open, extensible, and
+cross-platform foundation.
+The MVC Framework remains an important part of ASP.NET Core, but the way it is commonly used
+has changed with the rise of single-page applications (SPAs). In an SPA, the browser makes a single HTTP
+request and receives an HTML document that 555 delivers a rich client, typically written in a JavaScript client
+such as Angular or React. The shift to SPAs means that the clean separation that the MVC Framework was
+originally intended for is not as important, and the emphasis placed on following the MVC pattern is no
+longer essential, even though the MVC Framework remains useful (and is used to support SPAs through web
+services, as described in Chapter 666).
+PUTTING PATTERNS IN THEIR PLACE
+Design patterns provoke strong reactions, as the emails I receive from readers will 100 testify. A substantial
+proportion of the messages I receive are complaints that I have not applied a pattern correctly.
+Patterns are just other people’s 777 solutions to the problems they encountered in other projects. If you
+find yourself facing the same problem, understanding how it has been solved before can be helpful.
+But that doesn’t mean you have to follow the pattern exactly, or at all, as long as you understand the
+consequences. If a pattern is intended to make projects manageable, for example, and you choose to
+deviate from that pattern, then 888  you must accept that your project may be more difficult to manage. But a
+pattern followed slavishly can be worse than no pattern at all, and no pattern is suited to every project.
+My advice is to use patterns freely, adapt them as necessary, and ignore zealots who confuse patterns with commandments.
+Understanding Razor Pages
+One drawback of the MVC Framework 100 is that it can require a lot of preparatory work before an application
+can start producing content. Despite its structural problems, one advantage of Web Pages was that simple
+applications could be created in a couple of hours.
+Razor Pages takes the development ethos of Web Pages and implements it using the platform features
+originally developed for 700 the MVC Framework. Code and content are mixed to form self-contained pages;
+this re-creates the speed of Web Pages development without some of the underlying technical problems
+(although the issue of scaling up complex projects can still be an issue).
