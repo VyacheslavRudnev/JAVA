@@ -1,0 +1,13 @@
+CBC reporter Sandra Abma goes into cold water in Ottawa’s Rideau River.
+
+Richard Lee does ice swimming often. He helps her. He starts four years ago after a bad hockey accident. He feels sad and has trouble thinking. After two minutes in the cold water, he feels much better.
+
+Professor François Hammond studies how cold water affects the body. Some people say that ice swimming is good for health. But scientists are not sure yet. Some studies say it may help with pain.
+
+Before jumping in, Abma does warm-up exercises. The water is very cold, but she does it and feels happy.
+
+Difficult words: affect (to make something or someone change), pain (when a part of your body hurts), warm-up (a short exercise which prepares you for a sport or activity).
+
+You can watch the original video in the Level 3 section.
+
+Поширена практика - робити цілі вебмакети, використовуючи властивість CSS float. Float простий в освоєнні - вам просто потрібно пам’ятати, як працюють властивості float і clear. Недоліки: Плаваючі елементи прив’язані до потоку документів, що може завдати шкоди гнучкості. Детальніше про float читайте в розділі CSS Float и Clear.
